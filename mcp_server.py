@@ -29,7 +29,7 @@ def add(a: int, b: int) -> int:
 
 
 @mcp.tool()
-def can_listify_a_number(a: int) -> str:
+def can_I_listify_a_number(a: int) -> str:
     """Given a number, check if it can be further listified
 
     Args:
@@ -118,25 +118,35 @@ def check_integer_equality(a: int, b: int) -> str:
         return f"{int(a)} and {int(b)} are not the same"
 
 
-# @mcp.tool()
-# async def add_text_in_paint(text: str) -> dict:
-#     """Given a text, take that text, create a new image, open it in mac preview, create a rectangle on the image and add the text to the rectangle
+@mcp.tool()
+async def add_text_in_paint(text: str) -> dict:
+    """Given a text, take that text, create a new image, open it in mac preview, create a rectangle on the image and add the text to the rectangle
 
-#     Args:
-#         text (str): Text to add to the image
+    Args:
+        text (str): Text to add to the image
 
-#     Returns:
-#         dict: A message indicating if the text was added succesully or not and a helpful error message if it wasn't added successfully
-#     """
-#     try:
-#         open_paint_with_text_mac(text)
-#         return {
-#             "content": [
-#                 TextContent(type="text", text=f"Text:'{text}' added successfully")
-#             ]
-#         }
-#     except Exception as e:
-#         return {"content": [TextContent(type="text", text=f"Error: {str(e)}")]}
+    Returns:
+        dict: A message indicating if the text was added succesully or not and a helpful error message if it wasn't added successfully
+    """
+    try:
+        open_paint_with_text_mac(text)
+        return {
+            "content": [
+                TextContent(
+                    type="text",
+                    text=f"Text:'{text}' added successfully to the paint application",
+                )
+            ]
+        }
+    except Exception as e:
+        return {
+            "content": [
+                TextContent(
+                    type="text",
+                    text=f"Could not add the text to paint application. Error: {str(e)}.",
+                )
+            ]
+        }
 
 
 # DEFINE RESOURCES

@@ -22,11 +22,6 @@ def open_paint_with_text_mac(text):
     pyautogui.hotkey("command", "shift", "a")
     time.sleep(1)
 
-    # # Step 7: Open the markup pane
-    # pyautogui.moveTo(736, 53)  # Move to toolbar area (adjust if needed)
-    # pyautogui.click(button="left")  # Click the toolbar
-    # time.sleep(0.5)
-
     # Step 5: Select the rectangle tool (Shift + R)
     pyautogui.moveTo(220, 95)
     pyautogui.click(button="left")
@@ -36,7 +31,17 @@ def open_paint_with_text_mac(text):
     pyautogui.click(button="left")
     time.sleep(0.5)
 
-    # Step 8: Click the text tool from the toolbar
+    # Step 6: Expand the rectangle to fit the text
+    pyautogui.moveTo(504, 485)
+    pyautogui.mouseDown(button="left")
+    pyautogui.dragRel(280, 0, duration=1.5, button="left")
+    pyautogui.mouseUp(button="left")
+    pyautogui.moveTo(303, 334)
+    pyautogui.mouseDown(button="left")
+    pyautogui.dragRel(-280, 20, duration=1.5, button="left")
+    pyautogui.mouseUp(button="left")
+
+    # Step 7: Click the text tool from the toolbar
     pyautogui.moveTo(272, 95)  # Move to toolbar area (adjust if needed)
     pyautogui.click(button="left")  # Click the toolbar
     time.sleep(0.5)
@@ -47,10 +52,8 @@ def open_paint_with_text_mac(text):
 
     # Step 9: Type the text
     pyautogui.typewrite(text, interval=0.1)
-
     print("Text added to Preview in full-screen mode!")
 
 
 if __name__ == "__main__":
-    # Example usage
     open_paint_with_text_mac("Hello, macOS!")

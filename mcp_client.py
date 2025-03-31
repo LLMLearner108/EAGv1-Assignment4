@@ -20,6 +20,9 @@ COLORS = {
     "cyan": "\033[36m",
     "white": "\033[37m",
     "reset": "\033[0m",
+    "bold": "\033[1m",
+    "underline": "\033[4m",
+    "italic": "\033[3m",
 }
 
 # Access your API key and initialize Gemini client correctly
@@ -159,14 +162,19 @@ Examples:
 - FUNCTION_CALL: summify_list|[1, 2, 3]
 - FINAL_ANSWER: [42]
 
-DO NOT include any explanations or additional text.
+DO NOT include any explanations or additional text. Be very careful with selection of function calls and repeat the calls only when necessary.
 Your entire response should be a single line starting with either FUNCTION_CALL: or FINAL_ANSWER:"""
 
-                query = """Given two positive integers A and B, you can only perform the following operation:
+                query = """TASK:
+                Given two positive integers A and B, you can only perform the following operation:
                     Replace A with the sum of its digits
                     i.e. if A = 123, then you can perform the operation 1 + 2 + 3 = 6
                 Check if you can make A equal to B by performing the above operation any number of times. If yes, then say "YES, A can be made equal to B" and if not then say "NO, A can never be made equal to B".
-                A is 132 and B is 6
+                Finally visualize the answer in a paint tool.
+                A is 133 and B is 6
+                ---
+                Meta-instructions:
+                Make sure that you do not call the FINAL_ANSWER: statement before you have called the function to display the answer in a paint tool. Once you have done that then you can call the FINAL_ANSWER: statement.
                 """
                 print("Starting iteration loop...")
 
@@ -192,7 +200,9 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                     try:
                         response = await generate_with_timeout(prompt)
                         response_text = response.text.strip()
-                        print(f"{COLORS['green']}LLM Response: {response_text}{COLORS['reset']}")
+                        print(
+                            f"{COLORS['green']}{COLORS['bold']}LLM Response: {response_text}{COLORS['reset']}"
+                        )
 
                         # Find the FUNCTION_CALL line in the response
                         for line in response_text.split("\n"):
@@ -210,10 +220,18 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                         parts = [p.strip() for p in function_info.split("|")]
                         func_name, params = parts[0], parts[1:]
 
-                        print(f"\n{COLORS['yellow']}DEBUG: Raw function info: {function_info}{COLORS['reset']}")
-                        print(f"{COLORS['yellow']}DEBUG: Split parts: {parts}{COLORS['reset']}")
-                        print(f"{COLORS['yellow']}DEBUG: Function name: {func_name}{COLORS['reset']}")
-                        print(f"{COLORS['yellow']}DEBUG: Raw parameters: {params}{COLORS['reset']}")
+                        print(
+                            f"\n{COLORS['yellow']}DEBUG: Raw function info: {function_info}{COLORS['reset']}"
+                        )
+                        print(
+                            f"{COLORS['yellow']}DEBUG: Split parts: {parts}{COLORS['reset']}"
+                        )
+                        print(
+                            f"{COLORS['yellow']}DEBUG: Function name: {func_name}{COLORS['reset']}"
+                        )
+                        print(
+                            f"{COLORS['yellow']}{COLORS['bold']}DEBUG: Raw parameters: {params}{COLORS['reset']}"
+                        )
 
                         try:
                             # Find the matching tool to get its input schema
@@ -261,12 +279,17 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                                     ]
                                 else:
                                     arguments[param_name] = str(value)
-                            
+
                             import code
+
                             code.interact(local=dict(globals(), **locals()))
 
-                            print(f"{COLORS['blue']}DEBUG: Final arguments: {arguments}{COLORS['reset']}")
-                            print(f"{COLORS['blue']}DEBUG: Calling tool {func_name}{COLORS['reset']}")
+                            print(
+                                f"{COLORS['yellow']}DEBUG: Final arguments: {arguments}{COLORS['reset']}"
+                            )
+                            print(
+                                f"{COLORS['yellow']}DEBUG: Calling tool {func_name}{COLORS['reset']}"
+                            )
 
                             result = await session.call_tool(
                                 func_name, arguments=arguments
@@ -292,7 +315,9 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                                 print(f"DEBUG: Result has no content attribute")
                                 iteration_result = str(result)
 
-                            print(f"{COLORS['blue']}DEBUG: Final iteration result: {iteration_result}{COLORS['reset']}")
+                            print(
+                                f"{COLORS['blue']}{COLORS['bold']}{COLORS['underline']}DEBUG: Final iteration result: {iteration_result}{COLORS['reset']}"
+                            )
 
                             # Format the response based on result type
                             if isinstance(iteration_result, list):
@@ -301,8 +326,8 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                                 result_str = str(iteration_result)
 
                             iteration_response.append(
-                                f"In the {iteration + 1} iteration you called {func_name} with {arguments} parameters, "
-                                f"and the function returned {result_str}."
+                                f"In iteration {iteration + 1} you called {func_name} with {arguments} parameters, "
+                                f"and the function returned {result_str}.\n"
                             )
                             last_response = iteration_result
 
@@ -318,7 +343,9 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                             break
 
                     elif response_text.startswith("FINAL_ANSWER:"):
-                        print(f"\n{COLORS['yellow']}=== Agent Execution Complete ==={COLORS['reset']}")
+                        print(
+                            f"\n{COLORS['yellow']}=== Agent Execution Complete ==={COLORS['reset']}"
+                        )
                         break
 
                     iteration += 1
