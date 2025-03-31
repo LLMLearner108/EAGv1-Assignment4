@@ -176,7 +176,7 @@ Your entire response should be a single line starting with either FUNCTION_CALL:
                 If yes, then say "YES, A can be made equal to B by summing it's digits recursively" and if not then say "NO, A can never be made equal to B by summing it's digits recursively". Where A and B are to placeholders that you need to fill appropriately.
 
                 Finally send the result (i.e. either of the above statements, whichever is applicable) in an email to the recipient nayakvinayak2408@gmail.com with the subject "Answer to your query"
-                A is 133 and B is 6
+                A is 132 and B is 6
                 ---
                 Meta-instructions:
                 Make sure that you do not call the FINAL_ANSWER: statement before you have called the function to send the email. Once you have done that then you can say FINAL_ANSWER: statement where statement is the result of the email that you have sent.
