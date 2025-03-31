@@ -51,5 +51,6 @@ def open_paint_with_text_mac(text):
     print("Text added to Preview in full-screen mode!")
 
 
-# Example usage
-open_paint_with_text_mac("Hello, macOS!")
+if __name__ == "__main__":
+    # Example usage
+    open_paint_with_text_mac("Hello, macOS!")

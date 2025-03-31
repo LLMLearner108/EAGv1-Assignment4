@@ -1,0 +1,7 @@
+python-dotenv
+mcp
+google-generativeai
+pyautogui
+typer-cli
+pillow
+uv
